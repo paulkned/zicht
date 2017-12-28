@@ -1,0 +1,422 @@
+FORMAT: 1A
+
+# Zicht
+
+Dit is de API documentatie voor de solliciatie bij Zicht online.
+
+# E-mailaanmeldingen
+
+Alle API's gerelateerd aan e-mailaanmeldingen. 
+
+## E-mailaanmelding verzamelingen [/email-subscriptions]
+
+### Bekijk alle e-mailaanmeldingen [GET]
+
++ Response 200 (application/vnd.api+json)
+
+    + Body
+    
+            {
+                "data": [
+                    {
+                        "type": "email-subscriptions",
+                        "id": 1,
+                        "attributes": {
+                            "email": "ex@ample.com",
+                            "name": "Example"
+                        }
+                    },
+                    {
+                        "type": "email-subscriptions",
+                        "id": 2,
+                        "attributes": {
+                            "email": "exx@ample.com",
+                            "name": "Example 2"
+                        }
+                    }
+                ]
+            }
+            
+    + Schema
+    
+            {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "description": "The e-mail subscription",
+                        "properties": {
+                            "type": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "integer",
+                                "minimum": 1
+                            },
+                            "attributes": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+### Creëer een nieuwe e-mailaanmdeling [POST]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+    
+            Content-Type: application/vnd.api+json
+
+    + Body
+    
+            {
+                "data": {
+                    "type": "email-subscriptions",
+                    "attributes": {
+                        "email": "ex@ample.com",
+                        "name": "Example"
+                    }
+                }
+            }
+            
+    + Schema
+    
+            {
+                "data": {
+                    "type": "object",
+                    "description": "The e-mail subscription",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "required": true
+                        },
+                        "attributes": {
+                            "type": "object",
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "required": true
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
++ Response 200 (application/vnd.api+json)
+
+    + Headers
+    
+            Location: https://www.zicht.nl/api/email-subscriptions/1
+
+    + Body
+    
+            {
+                "data": {
+                    "type": "email-subscriptions",
+                    "id": 1,
+                    "attributes": {
+                        "email": "exx@ample.com",
+                        "name": "Example 2"
+                    }
+                },
+                "links": {
+                    "self": "https://www.zicht.nl/api/email-subscriptions/1"
+                }
+            }
+            
+    + Schema
+    
+            {
+                "data": {
+                    "type": "object",
+                    "description": "The e-mail subscription",
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "attributes": {
+                            "type": "object",
+                            "properties": {
+                                "email": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "links": {
+                    "type": "object",
+                    "properties": {
+                        "self": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+
++ Response 415
+
++ Response 409
+
++ Response 422 (application/vnd.api+json)
+
+    + Body
+
+            {
+                "errors": {
+                    "email": [
+                        {
+                            "id": "invalid-format",
+                            "title": "The email attribute is invalid"
+                        }
+                    ]
+                }
+            }
+
+    + Schema
+
+            {
+                "errors": {
+                    "type": "object",
+                    "description": "The validation errors",
+                    "properties": {
+                        "<key>": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+## E-mailaanmelding bewerkingen [/email-subscriptions/{id}]
+
++ Parameters
+
+    + id: nummer - De unieke identifier voor de e-mailaanmelding
+
+### Bekijk een enkele e-mailaanmeldingen [GET]
+
++ Response 200 (application/vnd.api+json)
+
+    + Body
+
+            {
+                "data": {
+                    "type": "email-subscriptions",
+                    "id": 1,
+                    "attributes": {
+                        "email": "exx@ample.com",
+                        "name": "Example 2"
+                    }
+                }
+            }
+
+    + Schema
+
+            {
+                "data": {
+                    "type": "object",
+                    "description": "The e-mail subscription",
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "attributes": {
+                            "type": "object",
+                            "properties": {
+                                "email": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
++ Response 404
+
+### Werk een e-mailaanmeldingen bij [PATCH]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Content-Type: application/vnd.api+json
+
+    + Body
+
+            {
+                "data": {
+                    "type": "email-subscriptions",
+                    "id": 1,
+                    "attributes": {
+                        "email": "ex@ample.com",
+                        "name": "Example"
+                    }
+                }
+            }
+
+    + Schema
+
+            {
+                "data": {
+                    "type": "object",
+                    "description": "The e-mail subscription",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "required": true
+                        },
+                        "id": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "required": true
+                        },
+                        "attributes": {
+                            "type": "object",
+                            "properties": {
+                                "email": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
++ Response 200 (application/vnd.api+json)
+
+    + Body
+
+            {
+                "data": {
+                    "type": "email-subscriptions",
+                    "id": 1,
+                    "attributes": {
+                        "email": "exx@ample.com",
+                        "name": "Example 2"
+                    }
+                }
+            }
+
+    + Schema
+
+            {
+                "data": {
+                    "type": "object",
+                    "description": "The e-mail subscription",
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "attributes": {
+                            "type": "object",
+                            "properties": {
+                                "email": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
++ Response 404
+
++ Response 415
+
++ Response 409
+
++ Response 422 (application/vnd.api+json)
+
+    + Body
+
+            {
+                "errors": {
+                    "email": [
+                        {
+                            "id": "invalid-format",
+                            "title": "The email attribute is invalid"
+                        }
+                    ]
+                }
+            }
+
+    + Schema
+
+            {
+                "errors": {
+                    "type": "object",
+                    "description": "The validation errors",
+                    "properties": {
+                        "<key>": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+### Verwijder een e-mailaanmeldingen [DELETE]
+
++ Response 204
+
++ Response 404
