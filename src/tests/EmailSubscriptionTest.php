@@ -3,8 +3,6 @@
 namespace Tests;
 
 use App\Models\EmailSubscription;
-use Slim\Http\Environment;
-use Slim\Http\Request;
 
 /**
  * Class EmailSubscriptionTest
@@ -45,15 +43,7 @@ class EmailSubscriptionTest extends TestCase
     public function testGettingList()
     {
         // Perform the call
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/email-subscriptions',
-        ]);
-
-        $request = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $request;
-
-        $response = $this->app->run(true);
+        $response = $this->runApp('GET', '/email-subscriptions');
 
         // Check that the body is valid
         $this->assertSame($response->getStatusCode(), 200);
@@ -85,15 +75,7 @@ class EmailSubscriptionTest extends TestCase
     public function testGettingItem()
     {
         // Perform the call
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/email-subscriptions/1',
-        ]);
-
-        $request = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $request;
-
-        $response = $this->app->run(true);
+        $response = $this->runApp('GET', '/email-subscriptions/1');
 
         // Check that the body is valid
         $this->assertSame($response->getStatusCode(), 200);
@@ -117,15 +99,7 @@ class EmailSubscriptionTest extends TestCase
     public function testGettingInvalidItem()
     {
         // Perform the call
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/email-subscriptions/4',
-        ]);
-
-        $request = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $request;
-
-        $response = $this->app->run(true);
+        $response = $this->runApp('GET', '/email-subscriptions/4');
 
         // Check that the body is valid
         $this->assertSame($response->getStatusCode(), 404);
@@ -141,14 +115,10 @@ class EmailSubscriptionTest extends TestCase
     public function testCreatingItem()
     {
         // Perform the call
-        $env = Environment::mock([
-            'CONTENT_TYPE' => 'application/vnd.api+json',
-            'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/email-subscriptions',
-        ]);
-
-        $request = Request::createFromEnvironment($env)
-            ->withParsedBody([
+        $response = $this->runApp(
+            'POST',
+            '/email-subscriptions',
+            [
                 'data' => [
                     'type' => 'email-subscriptions',
                     'attributes' => [
@@ -157,10 +127,6 @@ class EmailSubscriptionTest extends TestCase
                     ]
                 ]
             ]);
-
-        $this->app->getContainer()['request'] = $request;
-
-        $response = $this->app->run(true);
 
         // Check that the body is valid
         $this->assertSame($response->getStatusCode(), 201);
@@ -187,18 +153,11 @@ class EmailSubscriptionTest extends TestCase
     public function testCreatingItemWithoutHeader()
     {
         // Perform the call
-        $env = Environment::mock([
-            'CONTENT_TYPE' => 'application/invalid',
-            'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/email-subscriptions',
-        ]);
-
-        $request = Request::createFromEnvironment($env)
-            ->withParsedBody([]);
-
-        $this->app->getContainer()['request'] = $request;
-
-        $response = $this->app->run(true);
+        $response = $this->runApp(
+            'POST',
+            '/email-subscriptions',
+            null,
+            'application/invalid');
 
         // Check that the return type is correct
         $this->assertSame($response->getStatusCode(), 415);
@@ -214,14 +173,10 @@ class EmailSubscriptionTest extends TestCase
     public function testCreatingItemWithInvalidFields()
     {
         // Perform the call
-        $env = Environment::mock([
-            'CONTENT_TYPE' => 'application/vnd.api+json',
-            'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/email-subscriptions',
-        ]);
-
-        $request = Request::createFromEnvironment($env)
-            ->withParsedBody([
+        $response = $this->runApp(
+            'POST',
+            '/email-subscriptions',
+            [
                 'data' => [
                     'type' => 'email-subscriptions',
                     'attributes' => [
@@ -229,10 +184,6 @@ class EmailSubscriptionTest extends TestCase
                     ]
                 ]
             ]);
-
-        $this->app->getContainer()['request'] = $request;
-
-        $response = $this->app->run(true);
 
         // Check that the body is valid
         $this->assertSame($response->getStatusCode(), 422);
@@ -253,14 +204,10 @@ class EmailSubscriptionTest extends TestCase
     public function testUpdatingItem()
     {
         // Perform the call
-        $env = Environment::mock([
-            'CONTENT_TYPE' => 'application/vnd.api+json',
-            'REQUEST_METHOD' => 'PATCH',
-            'REQUEST_URI' => '/email-subscriptions/1',
-        ]);
-
-        $request = Request::createFromEnvironment($env)
-            ->withParsedBody([
+        $response = $this->runApp(
+            'PATCH',
+            '/email-subscriptions/1',
+            [
                 'data' => [
                     'type' => 'email-subscriptions',
                     'id' => 1,
@@ -270,10 +217,6 @@ class EmailSubscriptionTest extends TestCase
                     ]
                 ]
             ]);
-
-        $this->app->getContainer()['request'] = $request;
-
-        $response = $this->app->run(true);
 
         // Check that the body is valid
         $this->assertSame($response->getStatusCode(), 200);
@@ -300,18 +243,11 @@ class EmailSubscriptionTest extends TestCase
     public function testUpdatingItemWithoutHeader()
     {
         // Perform the call
-        $env = Environment::mock([
-            'CONTENT_TYPE' => 'application/invalid',
-            'REQUEST_METHOD' => 'PATCH',
-            'REQUEST_URI' => '/email-subscriptions/1',
-        ]);
-
-        $request = Request::createFromEnvironment($env)
-            ->withParsedBody([]);
-
-        $this->app->getContainer()['request'] = $request;
-
-        $response = $this->app->run(true);
+        $response = $this->runApp(
+            'PATCH',
+            '/email-subscriptions/1',
+            null,
+            'application/invalid');
 
         // Check that the return type is correct
         $this->assertSame($response->getStatusCode(), 415);
@@ -327,18 +263,7 @@ class EmailSubscriptionTest extends TestCase
     public function testUpdatingInvalidItem()
     {
         // Perform the call
-        $env = Environment::mock([
-            'CONTENT_TYPE' => 'application/vnd.api+json',
-            'REQUEST_METHOD' => 'PATCH',
-            'REQUEST_URI' => '/email-subscriptions/4',
-        ]);
-
-        $request = Request::createFromEnvironment($env)
-            ->withParsedBody([]);
-
-        $this->app->getContainer()['request'] = $request;
-
-        $response = $this->app->run(true);
+        $response = $this->runApp('PATCH','/email-subscriptions/4');
 
         // Check that the return type is correct
         $this->assertSame($response->getStatusCode(), 404);
@@ -354,14 +279,10 @@ class EmailSubscriptionTest extends TestCase
     public function testUpdatingItemWithInvalidFields()
     {
         // Perform the call
-        $env = Environment::mock([
-            'CONTENT_TYPE' => 'application/vnd.api+json',
-            'REQUEST_METHOD' => 'PATCH',
-            'REQUEST_URI' => '/email-subscriptions/1',
-        ]);
-
-        $request = Request::createFromEnvironment($env)
-            ->withParsedBody([
+        $response = $this->runApp(
+            'PATCH',
+            '/email-subscriptions/1',
+            [
                 'data' => [
                     'type' => 'email-subscriptions',
                     'id' => 4,
@@ -371,10 +292,6 @@ class EmailSubscriptionTest extends TestCase
                     ]
                 ]
             ]);
-
-        $this->app->getContainer()['request'] = $request;
-
-        $response = $this->app->run(true);
 
         // Check that the body is valid
         $this->assertSame($response->getStatusCode(), 422);
@@ -396,15 +313,7 @@ class EmailSubscriptionTest extends TestCase
     public function testDeletingItem()
     {
         // Perform the call
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'DELETE',
-            'REQUEST_URI' => '/email-subscriptions/1',
-        ]);
-
-        $request = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $request;
-
-        $response = $this->app->run(true);
+        $response = $this->runApp('DELETE','/email-subscriptions/1');
 
         // Check that the body is valid
         $this->assertSame($response->getStatusCode(), 204);
@@ -423,15 +332,7 @@ class EmailSubscriptionTest extends TestCase
     public function testDeletingInvalidItem()
     {
         // Perform the call
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'DELETE',
-            'REQUEST_URI' => '/email-subscriptions/4',
-        ]);
-
-        $request = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $request;
-
-        $response = $this->app->run(true);
+        $response = $this->runApp('DELETE','/email-subscriptions/4');
 
         // Check that the body is valid
         $this->assertSame($response->getStatusCode(), 404);

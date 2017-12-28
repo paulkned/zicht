@@ -24,7 +24,7 @@ Tot slot heb ik PHPunit gebruikt voor het testen. Dit is de defacto standaard en
 
 Voor het ontsluiten van de API heb ik besolten om gebruik te maken met de standaard die omschreven is op http://www.jsonapi.org. Het is wellicht een wat grote standaard voor zo'n kleine API. Maar uit ervaring weet ik dat werken met een dergelijke standaard zowel aan de aanbiedende als aan de afnemende kant heel duidelijk maakt wat er geïmplementeerd dient te worden. Het voorkomt semantische discussies.
 
-Slim heeft geen voorgeschreven architectuur en in de documentatie wordt zelfs gewerkt met een enkele PHP bestand, dus de opzet er van heb ik zelf bedacht. Ik ben begonnen door het PHP bestand te splitsen in een enkel bestand die als entrypoint dient en een class die de hele applicatie boot. 
+Slim heeft geen voorgeschreven architectuur en in de documentatie wordt zelfs gewerkt met een enkele PHP bestand. Gelukkig was er een skeleton applicatie waar ik een groot deel van de structuur van af kon leiden. Uiteraard heb ik er mijn eigen draai aangegeven want ik ben nou eenmaal een eigenwijze IT'er. 
 
 Omdat dit een API is, is er niet echt een View laag, maar de Model en Controllers heb ik wel zo veel mogelijk gescheiden om de logica op de juiste plek te houden. Configuratie heb ik in een aparte map neergezet en deze maakt ook gebruik van omgevings variabelen voor lokale settings. 
 
@@ -43,8 +43,7 @@ Een aantal zaken heb ik niet toegevoegd vanwege de scope en tijdsdruk van het pr
 * Authenticatie/Authorisatie, op basis van een API-key of oAuth.
 * Rate limiting, Nu kan iedereen onbeperkt de API spammen, dat kun je eenvoudig voorkomen door een rate limit toe te voegen per gebruiker.
 * Validators extraheren: Ik vind nu zelf dat de validatie van de velden bij een POST en een PATCH een beetje slordig is. Idealiter zou ik ze hebben willen extraheren naar classes als generieke validators (zoals bijvoorbeeld een RequiredValidator en een EmailValidator). Dit is generieker en verhoogt de ontwikkelsnelheid in een later stadium.
-* Paginatie in de lijst: Als je nu de lijst van alle aanmeldingen ophaalt is het één lange blob. Uit performance en overzichtsoverwegingen zou ik nog parameters toevoegen om de lijst te kunnen pagineren.  
-* De App.php een beetje opruimen: Sommige functies in App.php voeren vrij specifieke handelingen uit. Als je nu bijvoorbeeld een dependency of middlware wilt toevoegen moet dat daar gebeuren. Voor nu prima, maar de lange termijn niet. Idealiter zou ik alle middleware in classes willen zetten en dan willen chainen. Ook de routes en dependencies zouden een eigen plek moeten krijgen zodat het gelijk zichtbaar is waar je deze kunt toevoegen en bewerken.
+* Paginatie in de lijst: Als je nu de lijst van alle aanmeldingen ophaalt is het één lange blob. Uit performance en overzichtsoverwegingen zou ik nog parameters toevoegen om de lijst te kunnen pagineren.
 
 ## Installatie
 
